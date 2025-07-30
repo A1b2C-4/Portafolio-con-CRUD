@@ -1,7 +1,7 @@
 <?php include("cabecera.php"); ?>
 <?php include("conexion.php"); ?>
 <?php
-if($_POST){
+if($_POST && esAdmin()){ // Verifica si el usuario es admin antes de procesar el formulario
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['Descripción']; 
     $nombreArchivoOriginal = $_FILES['archivo']['name'];
@@ -21,7 +21,7 @@ if($_POST){
     exit;
 }
 
-if($_GET){
+if($_GET && esAdmin()){// Verifica si el usuario es admin antes de permitir la eliminación
     $id = $_GET['borrar'];
     $objConexion = new conexion();
 
@@ -45,6 +45,7 @@ $proyectos = $objConexion->consultar("SELECT * FROM proyectos");
 
 <div class="container">
     <div class="row">
+        <?php if (esAdmin()) { ?><!-- Si es admin, muestra el formulario para agregar proyectos -->
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Datos del proyecto</div>
@@ -64,6 +65,8 @@ $proyectos = $objConexion->consultar("SELECT * FROM proyectos");
                 </div>
             </div>
         </div>
+        <?php } ?> 
+
         <div class="col-md-6">
             <table class="table">
                 <thead>
@@ -76,11 +79,11 @@ $proyectos = $objConexion->consultar("SELECT * FROM proyectos");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($proyectos as $proyecto) { ?>
+                    <?php  $contador = 1; //Inicia el contador para los proyectos 
+                    foreach($proyectos as $proyecto) { ?>
                     <tr>
-                        <td><?php echo $proyecto['id'];?></td>
+                        <td><?php echo $contador;?></td>
                         <td><?php echo $proyecto['nombre'];?></td>
-
                         <td>
                             <img width="100" src="imagenes/<?php echo $proyecto['imagen'];?>"
                             alt="" 
@@ -92,7 +95,7 @@ $proyectos = $objConexion->consultar("SELECT * FROM proyectos");
                             <a class="btn btn-danger" href="?borrar=<?php echo $proyecto['id']; ?>" >Eliminar</a>
                         </td>       
                     </tr>
-                    <?php } ?>
+                    <?php $contador++;} ?> <!-- Incremento para cada proyecto -->
                 </tbody>
             </table>
         </div>

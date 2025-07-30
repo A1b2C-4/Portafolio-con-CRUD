@@ -1,9 +1,19 @@
 <?php
 session_start();
-if ( isset($_SESSION['usuario'])!="date") {
+//verificamos que el usuario este logueado
+//si no lo esta, lo redirigimos al login
+if ( !isset($_SESSION['usuario'])) {
     header("location:login.php");
+    exit;
 }
-
+//Verificamos que el usuario tenga el rol de administrador
+function esAdmin(){
+    return isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin';
+}
+//Verificamos que es un usuario normal
+function esUsuario(){
+    return isset ($_SESSION ['rol'] )&& $_SESSION['rol'] =='usuario';
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,9 +26,18 @@ if ( isset($_SESSION['usuario'])!="date") {
 </head>
 <body>
 <div class="container">
+
+<!--Navegacion paginan principal--->
 <a href="index.php">Inicio</a> |
+<?php if (esAdmin()) { ?>
 <a href="Galeria.php">Galeria</a> |
-<a href="cerrar.php">Cerrar</a> 
+<a href="usuarios.php">Usuarios</a> |
+<?php } else{ ?>  <!-- Si no es admin, solo muestra galería -->
+
+<span style= "color: gray;"> Galeria </span> |
+<?php } ?>
+
+<a href="cerrar.php"> Cerrar </a> 
 </br>
 
 

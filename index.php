@@ -1,4 +1,13 @@
 <?php include("cabecera.php"); ?>
+<?php
+if (esAdmin()) {
+  $mensajeBienvenida = "Bienvenido, administrador";
+  $descripcion="Tienes acceso completo:agregar, editar y eliminar proyectos";
+} else {
+  $mensajeBienvenida = "Bienvenido, usuario";
+  $descripcion="Tienes acceso limitado: solo puedes ver los proyectos";
+}
+?>
 <?php include("conexion.php"); ?>
 <?php
 $objConexion = new conexion();
@@ -6,8 +15,8 @@ $proyectos = $objConexion->consultar("SELECT * FROM proyectos");
 ?>
     <div class="p-5 bg-light">
     <div class="container">  
-     <h1 class="display-3">Bienvenid@s</h1>
-     <p class="lead">Esta es una galeria personal</p>
+     <h1 class="display-3"><?php echo $mensajeBienvenida; ?> </h1>
+     <p class="lead"><?php echo $descripcion; ?></p>
      <hr class="my-2">
      <p>Mas información</p>
 

@@ -1,12 +1,27 @@
 <?php
 session_start();
+
+
 if($_POST) {
-    
-if( ($_POST['usuario']=="date") && ($_POST['contraseña']=="12345") ){
-$_SESSION['usuario']="date";
-    header("location:index.php");
+ include ("conexion.php");// incluye el archivo de conexion a la base de datos
+ $objConexion = new conexion();// crea un objeto de conexion para hacer las consultas
+
+ //Captura datos del formulario y los guarda en variables 
+ $usuario = $_POST['usuario'];
+ $contraseña = $_POST['contraseña'];
+
+ //Consulta en la base de adatos si el usuario y contraseña existen y coincidan
+    $sql = "SELECT * FROM usuarios WHERE usuario='$usuario' AND contraseña='$contraseña'";
+   
+    $resultado = $objConexion->consultar($sql);// ejecuta la consulta y guarda el resultado en la variable $resultado
+
+if(count ($resultado) > 0){ // Si el resultado de la consulta es mayor a 0, significa que el usuario y contraseña son correctos
+    $_SESSION['usuario'] = $resultado[0]['usuario'];// Guarda el usuario en la sesión
+    $_SESSION['rol'] = $resultado[0]['rol'];// Guarda el rol del usuario en la sesión
+    header("location:index.php");//redirige a la pagina
+
 }else{
-    echo"<script> alert( 'Usuario o contraseña incorrecta');</script>";
+    echo "<script> alert ('Usuario o contraseña incorrecta'); </script>";
     
 }
 
